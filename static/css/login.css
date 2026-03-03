@@ -1,0 +1,359 @@
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --accent-color: #e74c3c;
+  --light-color: #f8f9fa;
+  --dark-color: #2c3e50;
+  --text-color: #333;
+  --border-radius: 12px;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-color);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  min-height: 85vh;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+}
+
+/* Left Side - Branding/Info */
+.login-left {
+  flex: 1;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #1a2530 100%);
+  color: white;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-left::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="%233498db" opacity="0.05"/></svg>');
+  background-size: cover;
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-icon {
+  font-size: 4rem;
+  color: var(--secondary-color);
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.brand-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.brand-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin-bottom: 30px;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.features-list li {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 1.05rem;
+}
+
+.features-list li i {
+  color: var(--secondary-color);
+  margin-right: 15px;
+  font-size: 1.3rem;
+  width: 25px;
+}
+
+/* Right Side - Login Form */
+.login-right {
+  flex: 1;
+  background-color: white;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.form-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.form-subtitle {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.form-group {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--primary-color);
+  font-size: 1.05rem;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 1.1rem;
+}
+
+.form-control-custom {
+  width: 100%;
+  padding: 15px 15px 15px 50px;
+  border: 2px solid #e1e5eb;
+  border-radius: var(--border-radius);
+  font-size: 1.05rem;
+  transition: var(--transition);
+  background-color: #f8f9fa;
+}
+
+.form-control-custom:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-control-custom::placeholder {
+  color: #999;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: var(--transition);
+}
+
+.password-toggle:hover {
+  color: var(--secondary-color);
+}
+
+.btn-login {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--secondary-color) 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid #e1e5eb;
+}
+
+.forgot-password {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.forgot-password:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.home-link {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.home-link a {
+  color: #666;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.home-link a:hover {
+  color: var(--secondary-color);
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e5eb;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: var(--border-radius);
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+  transition: var(--transition);
+}
+
+.close:hover {
+  color: var(--accent-color);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .login-container {
+    flex-direction: column;
+    max-width: 600px;
+    min-height: auto;
+  }
+
+  .login-left,
+  .login-right {
+    padding: 40px 30px;
+  }
+
+  .brand-title {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  body {
+    padding: 10px;
+  }
+
+  .login-left,
+  .login-right {
+    padding: 30px 20px;
+  }
+
+  .brand-title {
+    font-size: 1.8rem;
+  }
+
+  .form-title {
+    font-size: 1.8rem;
+  }
+
+  .form-footer {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        form input[type="text"],
+        form input[type="file"],
+        select,
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        form input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .close-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .close-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Book Details</h1>
+    <form id="editBookForm" action="{{ url_for('edit_book', book_id=book['_id']) }}" method="POST" enctype="multipart/form-data">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{ book['title'] }}" required><br><br>
+
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" value="{{ book['author'] }}" required><br><br>
+
+        <!-- Book Category -->
+        <label for="category">Book Category:</label>
+        <select id="category" name="category">
+            <option value="">{{ book['category'] }}</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Non-fiction">Non-fiction</option>
+            <option value="Science">Science</option>
+            <option value="Biography">Biography</option>
+            <option value="History">History</option>
+            <!-- Add more categories as needed -->
+        </select>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" required>{{ book['description'] }}</textarea><br><br>
+
+        <label for="file">Upload New File (DOC, TXT):</label>
+        <input type="file" id="file" name="file" accept=".doc,.docx,.txt"><br><br>
+
+        <label for="image">Upload New Image (JPG, PNG):</label>
+        <input type="file" id="image" name="image" accept=".jpg,.png"><br><br>
+
+        <input type="submit" value="Update Book">
+    </form>
+    
+    <a href="{{ url_for('manage_book') }}">Back to Book Section</a>
+
+    <!-- Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Book updated successfully!</p>
+            <button id="closeModal" class="close-btn">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("editBookForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting immediately
+
+            // Show the modal
+            var modal = document.getElementById("successModal");
+            var closeModalButton = document.getElementsByClassName("close")[0];
+            modal.style.display = "block";
+
+            // After 2 seconds, close the modal and submit the form
+            setTimeout(function() {
+                modal.style.display = "none"; // Hide the modal
+                document.getElementById("editBookForm").submit(); // Submit the form
+            }, 2000); // 2-second delay
+
+            // Close the modal when clicking the close button
+            closeModalButton.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Close the modal if the user clicks anywhere outside of the modal
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>User Profile</h1>
+        <nav>
+            {% if user['role'] == 'admin' %}
+                <a href="{{ url_for('admin_dashboard') }}">Home</a>
+            {% elif user['role'] == 'user' %}
+                <a href="{{ url_for('user_dashboard') }}">Home</a>
+            {% endif %}
+            <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+            <a href="{{ url_for('about') }}" class="nav-link">About</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <!-- Main Section -->
+    <main>
+        <div class="profile-container">
+            <h3>User Name: [ {{ user.username}} ]</h3>
+            <h3>Email Id:  [ {{ user.email}} ]</h3>
+            <h3>Phone Number: [ {{ user.phone_number}} ]</h3>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Library Management System</p>
+    </footer>
+    
+    <script>
+        // Function to show modal and auto-hide it after 3 seconds
+        function showSuccessModal(event) {
+            event.preventDefault(); // Prevent form submission
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'block';
+
+            // Automatically close the modal after 3 seconds
+            setTimeout(() => {
+                modal.style.display = 'none';
+                // After the modal hides, submit the form
+                document.getElementById('profile-form').submit();
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

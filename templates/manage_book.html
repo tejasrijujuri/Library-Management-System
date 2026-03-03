@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            background: #008080;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom:10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffde59;
+        }
+
+        h2 {
+            color: #444;
+            border-bottom: 2px solid #444;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+
+        strong {
+            display: block;
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+
+        .actions {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 50px;
+            display:flex;
+            flex-direction: column;
+        }
+
+        ul li {
+            background: #fff;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+
+        }
+
+        ul li img {
+            width:100%;
+            border-radius: 4px;
+            margin-right: 20px;
+        }
+
+
+        ul li a {
+            background-color: rgb(21, 43, 141);
+            padding:4px;
+            border-radius:4px;
+            color: white;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .delete-book {
+            background-color:red;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+         /* Modal styles */
+         .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .confirm-delete {
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .btn-danger {
+            background-color: red;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: gray;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav>
+        <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+    </nav>
+    <h2>Manage Books</h2>
+    <ul id="book-list">
+        {% for book in books %}
+        <li id="book-{{ book['_id'] }}">
+            <img src="{{ url_for('static', filename='images/' ~ book['image']) }}" alt="{{ book['title'] }}" style="width: 100px; height: auto;">
+            <div>
+                <strong>{{ book['title'] }}</strong> by {{ book['author'] }}<br>
+                <br><br>
+                <a href="{{ url_for('book_details', book_id=book['_id']) }}">View Details</a> | 
+                <a href="{{ url_for('edit_book', book_id=book['_id']) }}">Edit</a> | 
+                <a href="#" class="delete-book" data-book-id="{{ book['_id'] }}">Delete</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+     <!-- Footer -->
+     <footer>
+        <p>&copy; 2024 Library Management System. All rights reserved.</p>
+    </footer>
+
+    <!-- Modal for delete confirmation -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Are you sure you want to delete this book?</p>
+            <div class="confirm-delete">
+                <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                <button id="cancelDeleteBtn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for success message -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Book deleted successfully!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let selectedBookId = null;
+            const deleteModal = document.getElementById("deleteModal");
+            const successModal = document.getElementById("successModal");
+            const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+            const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+            const closeButtons = document.querySelectorAll(".close");
+
+            // Handle delete button click and show delete confirmation modal
+            const deleteButtons = document.querySelectorAll('.delete-book');
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default behavior
+                    selectedBookId = this.getAttribute('data-book-id'); // Store selected book ID
+                    deleteModal.style.display = "block"; // Show the delete confirmation modal
+                });
+            });
+
+            // Handle confirming the delete action
+            confirmDeleteBtn.addEventListener('click', function() {
+                // Perform AJAX request to delete book
+                fetch(`/delete_book_admin/${selectedBookId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        // Remove the book element from the DOM
+                        const bookElement = document.getElementById(`book-${selectedBookId}`);
+                        bookElement.remove();
+
+                        // Show the mini window modal for success
+                        deleteModal.style.display = "none";
+                        successModal.style.display = "block";
+
+                        // Auto-close success modal after 2 seconds
+                        setTimeout(function() {
+                            successModal.style.display = "none";
+                        }, 2000);
+                    } else {
+                        alert('Failed to delete the book.');
+                    }
+                });
+            });
+
+            // Handle cancel button on delete confirmation modal
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteModal.style.display = "none"; // Close the delete confirmation modal
+            });
+
+            // Handle closing both modals
+            closeButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    deleteModal.style.display = "none";
+                    successModal.style.display = "none";
+                });
+            });
+
+            // Close modals if clicked outside of them
+            window.onclick = function(event) {
+                if (event.target == deleteModal) {
+                    deleteModal.style.display = "none";
+                } else if (event.target == successModal) {
+                    successModal.style.display = "none";
+                }
+            };
+        });
+    </script>
+</body>
+</html>

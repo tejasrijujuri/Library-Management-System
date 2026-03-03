@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css')}}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <h1 class="site-title">Library Management System</h1>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <a href="{{ url_for('user_dashboard') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+        <a href="{{ url_for('about') }}" class="nav-link">About</a>
+        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Description Section -->
+        <div class="description">
+            <h2>About Us</h2>
+            <p>Welcome to the Library Management System! Our platform is designed to help manage and organize a library's books and users. We provide a user-friendly interface for both administrators and users to interact with the library's resources.</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats">
+            <div class="box total-books">
+                <h2>Total Books</h2>
+                <p id="total-books">Loading...</p>
+            </div>
+            <div class="box total-users">
+                <h2>Total Users</h2>
+                <p id="total-users">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Links Section -->
+        <div class="links">
+            <p><a href="{{ url_for('about') }}">About Us</a> | <a href="#">Contact Details</a></p>
+            <p>Website Created by: Your Name</p>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>&copy; 2024 Library Management System. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript to Fetch Stats -->
+    <script>
+        async function fetchStats() {
+            try {
+                const responseBooks = await fetch('/api/total_books');
+                const totalBooks = await responseBooks.json();
+                document.getElementById('total-books').textContent = totalBooks.count;
+
+                const responseUsers = await fetch('/api/total_users');
+                const totalUsers = await responseUsers.json();
+                document.getElementById('total-users').textContent = totalUsers.count;
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        fetchStats();
+    </script>
+</body>
+</html>

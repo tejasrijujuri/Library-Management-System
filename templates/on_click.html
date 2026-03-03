@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ main_book['title'] }} - Book Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/book_details.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header styles */
+        header {
+            background: linear-gradient(90deg, #003366 0%, #004c99 100%);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header img {
+            width: 50px;
+            height: 50px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Navigation styles */
+        nav {
+            display: flex;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer styles */
+        footer {
+            background: linear-gradient(90deg, #035eb9 0%, #004c99 100%);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .main-book, .other-books {
+            margin: 20px;
+        }
+        .main-book {
+            display: flex;
+            align-items: flex-start;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .main-book img {
+            width: 150px;
+            height: 250px;
+            margin-right: 20px;
+            border-radius: 6px;
+        }
+        .main-book h2 {
+            margin-top: 0;
+        }
+        .read-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #035eb9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .read-btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .read-btn:hover {
+            background-color: #004c99;
+        }
+        .read-btn a:hover {
+            text-decoration: underline;
+        }
+        hr {
+            margin: 40px 0;
+            border: 0.5px solid #ddd;
+        }
+        .other-books h3 {
+            margin-bottom: 10px;
+        }
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        .book-card {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .book-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .book-card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .book-card p {
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            .main-book {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .main-book img {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Library Name and Navigation -->
+    <header>
+        <div class="library-info">
+            <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="Library Logo">
+            <h1>My Library</h1>
+        </div>
+        <nav>
+            <a href="{{ url_for('user_dashboard') }}">User Dashboard</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="">Contact</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <!-- Main Book Section -->
+    <div class="main-book">
+        <img src="{{ url_for('static', filename='images/' ~ main_book['image']) }}" alt="{{ main_book['title'] }}">
+        <div>
+            <h2>{{ main_book['title'] }}</h2>
+            <p><strong>Author:</strong> {{ main_book['author'] }}</p>
+            <p><strong>Description:</strong> {{ main_book['description'] }}</p>
+            <!-- Button to read the book -->
+            <button class="read-btn">
+                <a href="{{ url_for('read_book', book_id=main_book['_id']) }}" target="_blank">Read Book</a>
+            </button>
+        </div>
+    </div>
+    
+    <hr>
+    
+    <!-- Display other books from the same category -->
+    <div class="other-books">
+        <h3>Other books in the {{ main_book['category'] }} category:</h3>
+        <div class="book-grid">
+            {% if other_books %}
+            {% for book in other_books %}
+            <div class="book-card">
+                <a href="{{ url_for('on_click', book_id=book._id)}}">
+                    <img src="{{ url_for('static', filename='images/' ~ book['image']) }}" alt="{{ book['title'] }}">
+                </a>
+                <h3>{{ book['title'] }}</h3>
+                <p>by {{ book['author'] }}</p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No other books available in this category.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 My Library. All rights reserved. | <a href="" style="color: white; text-decoration: underline;">Privacy Policy</a></p>
+    </footer>
+
+</body>
+</html>
